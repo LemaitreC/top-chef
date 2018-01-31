@@ -1,0 +1,48 @@
+{
+  "name": "Le Chiberta",
+  "address": {
+    "number": "3",
+    "rue": "Rue Arsène Houssaye",
+    "zipcode": "75008",
+    "town": "Paris 08"
+  },
+  "transport": "Ligne 1, 2, 6 ou RER A - Charles de Gaulle Etoile",
+
+  "phone": "01 53 53 42 00",
+  "website": "http://www.lechiberta.com/",
+  "cuisineType": ["Cuisine Moderne", "Créative"],
+  "price": {
+    "min": 49,
+    "max": 120
+  },
+  "grade": {
+    "average": 4.2,
+    "tableQuality": 4.3,
+    "service": 4.2,
+    "surroundings": 4.1,
+    "rateQualityPrice": 3.7,
+    "Ambiance": 3.9,
+    "drinks": 4.2
+  },
+  "specialities": ["Saumon façon ″gravlax″ en tartare panna cotta de brocolis, chantilly iodée",
+    "Turbot des côtes normandes poché à la citronnelle spaghetti à l’encre de seiche, bouillon au lait de coco",
+    "Noix de ris de veau laqué à la truffe d’automne fricassée de champignons sauvages, purée truffée",
+    "Figues de Solliès au jus de framboise blanc-manger au poivre de Sancho"
+  ],
+  "services": ["Air Conditionné", "Banquet"],
+  "languages": ["Allemand", "Anglais"],
+  "paiment": ["Amex", "Diners club"],
+  "professionalAssociation:": "Académie Culinaire",
+  "openingTime": {
+    "Lundi: 12:00-14:30, 19:30-23:00",
+    "Mardi": "12:00-14:30, 19:30-23:00",
+    "Mercredi": "12:00-14:30, 19:30-23:00",
+    "Jeudi": "12:00-14:30, 19:30-23:00",
+    "Vendredi": "12:00-14:30, 19:30-23:00",
+    "Samedi": "19:00-23:30",
+    "Dimanche": "Fermé"
+  },
+  "praticalInfo":"Situé à quelques mètres seulement des Champs-Elysées, Le Chiberta, habillé de rouge et noir, vous propose une cuisine gastronomique française d'exception. Corridor de bouteilles allongées, imaginé par l’architecte Jean-Michel Wilmot...Voir plus",
+  "stars":"1 étoile MICHELIN : une cuisine d’une grande finesse. Vaut l’étape !",
+  "description":"Le Chiberta version Guy Savoy s'est choisi le noir comme couleur, le vin comme symbole et l'inventivité comme fil conducteur. En entrant, on est plongé dans un autre univers, tamisé, calme et feutré. Parfait pour les repas d'affaires comme pour les rencontres plus intimes. L'aménagement intérieur, conçu par l'architecte Jean-Michel Wilmotte, surprend par son minimalisme radical, tout en chic discret et design. La grande originalité du lieu reste indéniablement la cave à vins verticale : de grands crus habillant les murs à la manière d'une bibliothèque ou d'oeuvres d'art. Entre deux alignements de bouteilles, des tableaux modernes et abstraits colorent ponctuellement l'espace. Confortablement installé à table, on apprécie toute l'étendue de la cuisine, supervisée par le "patron", qui revisite joliment la tradition. Bon à savoir : le menu du marché est revu chaque semaine, une carte d'huîtres est disponible au comptoir, et la cave, évidemment, est parfaitement composée."
+}
