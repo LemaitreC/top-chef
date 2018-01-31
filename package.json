@@ -1,0 +1,26 @@
+{
+  "name": "top-chef",
+  "version": "1.0.0",
+  "description": "workshop 3 ",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LemaitreC/top-chef.git"
+  },
+  "author": "Corentin LEMAITRE",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LemaitreC/top-chef/issues"
+  },
+  "homepage": "https://github.com/LemaitreC/top-chef#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "request": "^2.83.0"
+  }
+}
