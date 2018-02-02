@@ -1,7 +1,12 @@
 const lafourchette = require('./modules/lafourchette')
+const michelin = require('./modules/michelin')
 
-// console.log(lafourchette.getRestaurant('Le Chiberta','75008'))
 
-lafourchette.matchRestaurant('Le Chiberta','75008', (err, data)=>{
+michelin.getAllRestaurant((err,data)=>{
   console.log(data)
 })
+
+
+// lafourchette.matchRestaurant('Le Chiberta','75008', (err, data)=>{
+//   console.log(data)
+// })
