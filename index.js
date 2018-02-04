@@ -3,7 +3,7 @@ const michelin = require('./modules/michelin')
 
 
 michelin.getAllRestaurant((err,data)=>{
-  console.log(data)
+  console.log("Status :" +data)
 })
 
 

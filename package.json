@@ -21,6 +21,7 @@
   "homepage": "https://github.com/LemaitreC/top-chef#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
+    "mongodb": "2.2.33",
     "request": "^2.83.0"
   }
 }
