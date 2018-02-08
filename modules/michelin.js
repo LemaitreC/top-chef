@@ -104,7 +104,10 @@ function getDescription(link) {
         item.name = clean($(pagePath + '> div.panels-content-main.panels-content-main_regionone > div > div.panels-content-main-left > div > div > div > div > h1').text())
         item.stars = parseInt($('#node_poi-guide-wrapper > div.node_poi-distinction-section > ul > li:nth-child(1) > div.content-wrapper').text().charAt(0))
         item.url = link
-        item.address = clean($(pagePath + '> div.panels-content-main.panels-content-main_regionone > div > div.panels-content-main-left > div > div > div > div > div.poi_intro-display-address').text())
+        item.address = {}
+        item.address.street = clean($(pagePath + ' > div.panels-content-main.panels-content-main_regionone > div > div.panels-content-main-left > div > div > div > div > div.poi_intro-display-address > div > div > div > div.street-block > div').text())
+        item.address.zipcode = $(pagePath + ' > div.panels-content-main.panels-content-main_regionone > div > div.panels-content-main-left > div > div > div > div > div.poi_intro-display-address > div > div > div > div.addressfield-container-inline.locality-block.country-FR > span.postal-code').text()
+        item.address.town = $(pagePath + ' > div.panels-content-main.panels-content-main_regionone > div > div.panels-content-main-left > div > div > div > div > div.poi_intro-display-address > div > div > div > div.addressfield-container-inline.locality-block.country-FR > span.locality').text()
         item.cuisineType = clean($('#node_poi-menu-wrapper > div.node_poi-menu-intro.node_poi-row > div.node_poi-cooking-types').text())
         item.grade = {}
         item.price = clean($(pagePath + '> div.panels-content-main.panels-content-main_regionone > div > div.panels-content-main-left > div > div > div > div > div.poi_intro-display-prices').text())
@@ -115,6 +118,7 @@ function getDescription(link) {
         item.grade.rateQualityPrice = parseFloat($('#node_poi-review-wrapper > div.node_poi-review.node_poi-row > div.node_poi-restaurant-rating > div:nth-child(4) > div.poi_node-items-rating > span.avg-rating-points').text())
         item.grade.ambiance = parseFloat($('#node_poi-review-wrapper > div.node_poi-review.node_poi-row > div.node_poi-restaurant-rating > div:nth-child(5) > div.poi_node-items-rating > span.avg-rating-points').text())
         item.grade.drinks = parseFloat($('#node_poi-review-wrapper > div.node_poi-review.node_poi-row > div.node_poi-restaurant-rating > div:nth-child(6) > div.poi_node-items-rating > span.avg-rating-points').text())
+        item.discount ={}
 
         resolve(item)
       } else {
