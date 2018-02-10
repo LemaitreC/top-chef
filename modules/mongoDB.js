@@ -25,3 +25,20 @@ exports.saveRestaurants = (restaurants) => new Promise(function(resolve, reject)
     })
   })
 })
+
+exports.getRestaurants = (callback) => {
+  mongo.connect('mongodb://top_chef:P4ssword@ds223578.mlab.com:23578/top-chef', function(err, db) {
+    if (err) {
+      callback(err,null)
+    }
+    db.collection("restaurants").find({}).toArray(function(err, docs) {
+      if (err) {
+        callback(err,null)
+      }
+    console.log("Found the following records");
+    console.log(docs)
+    callback(null,docs)
+  });
+
+  })
+}

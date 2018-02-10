@@ -1,5 +1,6 @@
 const lafourchette = require('./modules/lafourchette')
 const michelin = require('./modules/michelin')
+const mongo = require('./modules/mongodb')
 
 // importing the 'restify' module and create an instance.
 const restify = require('restify')
@@ -29,7 +30,7 @@ const status = {
 
 const defaultPort = 8081
 
-server.get('/', function(req, res) {
+server.get('/restaurants', function(req, res) {
 	michelin.getAllRestaurant( (err, data) => {
 		res.setHeader('content-type', 'application/json')
 		res.setHeader('accepts', 'GET')
@@ -45,8 +46,30 @@ server.get('/', function(req, res) {
 })
 
 
-server.get('/discount', function(req, res) {
-	lafourchette.matchRestaurant('Le Chiberta','75008', (err, data) => {
+server.get('/', function(req, res) {
+	mongo.getRestaurants( (err, data) => {
+		res.setHeader('content-type', 'application/json')
+		res.setHeader('accepts', 'GET')
+		if (err) {
+			res.send(status.badRequest, {
+				error: err.message
+			})
+		} else {
+			res.send(status.ok, data)
+		}
+		res.end()
+	})
+})
+
+
+
+server.get('/discount/:name/:zipcode', function(req, res) {
+	if(!req.params.name || !req.params.zipcode){
+		res.send(status.badRequest, {
+			error: "Wrong params request"
+		})
+	}
+	lafourchette.matchRestaurant(req.params.name,req.params.zipcode, (err, data) => {
 		res.setHeader('content-type', 'application/json')
 		res.setHeader('accepts', 'GET')
 		if (err) {

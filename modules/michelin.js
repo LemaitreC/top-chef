@@ -7,6 +7,7 @@ const mongodb = require('./mongoDB')
 const urlWeb = 'https://restaurant.michelin.fr/restaurants/france/restaurants-1-etoile-michelin/restaurants-2-etoiles-michelin/restaurants-3-etoiles-michelin'
 
 
+/* SCREEN SCRAPPING */
 exports.getAllRestaurant = (callback) => {
   pagesnumber(urlWeb).then(pages => {
     const promises = []
