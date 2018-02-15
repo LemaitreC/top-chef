@@ -2,6 +2,10 @@ const lafourchette = require('./modules/lafourchette')
 const michelin = require('./modules/michelin')
 const mongo = require('./modules/mongodb')
 
+//p_map
+//p-settle
+
+
 // importing the 'restify' module and create an instance.
 const restify = require('restify')
 const server = restify.createServer()
@@ -15,6 +19,9 @@ const server = restify.createServer()
 //   console.log(data)
 // })
 
+// lafourchette.addDiscounts( (err, data) => {
+// 		console.log(data)
+// })
 
 
 
@@ -70,6 +77,22 @@ server.get('/discount/:name/:zipcode', function(req, res) {
 		})
 	}
 	lafourchette.matchRestaurant(req.params.name,req.params.zipcode, (err, data) => {
+		res.setHeader('content-type', 'application/json')
+		res.setHeader('accepts', 'GET')
+		if (err) {
+			res.send(status.badRequest, {
+				error: err.message
+			})
+		} else {
+			res.send(status.ok, data)
+		}
+		res.end()
+	})
+})
+
+
+server.get('/updateDiscounts', function(req, res) {
+	lafourchette.addDiscounts( (err, data) => {
 		res.setHeader('content-type', 'application/json')
 		res.setHeader('accepts', 'GET')
 		if (err) {

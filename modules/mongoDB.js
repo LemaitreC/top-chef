@@ -29,16 +29,35 @@ exports.saveRestaurants = (restaurants) => new Promise(function(resolve, reject)
 exports.getRestaurants = (callback) => {
   mongo.connect('mongodb://top_chef:P4ssword@ds223578.mlab.com:23578/top-chef', function(err, db) {
     if (err) {
-      callback(err,null)
+      callback(err, null)
     }
     db.collection("restaurants").find({}).toArray(function(err, docs) {
       if (err) {
-        callback(err,null)
+        callback(err, null)
       }
-    console.log("Found the following records");
-    console.log(docs)
-    callback(null,docs)
-  });
+      console.log("Found the following records");
+      console.log(docs)
+      callback(null, docs)
+    });
 
   })
 }
+
+exports.getAllRestaurants = () => {
+    return new Promise(function(resolve, reject) {
+        mongo.connect('mongodb://top_chef:P4ssword@ds223578.mlab.com:23578/top-chef', function(err, db) {
+          if (err) {
+            reject(err)
+          }
+          db.collection("restaurants").find({}).toArray(function(err, docs) {
+            if (err) {
+              reject(err)
+            }
+            // console.log("Found the following records");
+            // console.log(docs)
+            resolve(docs)
+          });
+
+        })
+      })
+    }

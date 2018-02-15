@@ -11,7 +11,8 @@ const urlWeb = 'https://restaurant.michelin.fr/restaurants/france/restaurants-1-
 exports.getAllRestaurant = (callback) => {
   pagesnumber(urlWeb).then(pages => {
     const promises = []
-    for (var i = 1; i <= pages; i++) {
+    //for (var i = 1; i <= pages; i++) {
+    for (var i = 1; i <= 1; i++) {
       promises.push(getRestaurantsLinks(i))
     }
     return Promise.all(promises)
@@ -105,6 +106,7 @@ function getDescription(link) {
         item.name = clean($(pagePath + '> div.panels-content-main.panels-content-main_regionone > div > div.panels-content-main-left > div > div > div > div > h1').text())
         item.stars = parseInt($('#node_poi-guide-wrapper > div.node_poi-distinction-section > ul > li:nth-child(1) > div.content-wrapper').text().charAt(0))
         item.url = link
+        item.idLaFourchette= null
         item.address = {}
         item.address.street = clean($(pagePath + ' > div.panels-content-main.panels-content-main_regionone > div > div.panels-content-main-left > div > div > div > div > div.poi_intro-display-address > div > div > div > div.street-block > div').text())
         item.address.zipcode = $(pagePath + ' > div.panels-content-main.panels-content-main_regionone > div > div.panels-content-main-left > div > div > div > div > div.poi_intro-display-address > div > div > div > div.addressfield-container-inline.locality-block.country-FR > span.postal-code').text()
