@@ -1,5 +1,6 @@
 const cheerio = require('cheerio')
 const request = require('request')
+const pReflect = require('p-reflect')
 
 /* importing the database module */
 const mongodb = require('./mongoDB')
@@ -9,14 +10,16 @@ const urlWeb = 'https://restaurant.michelin.fr/restaurants/france/restaurants-1-
 
 /* SCREEN SCRAPPING */
 exports.getAllRestaurant = (callback) => {
-  pagesnumber(urlWeb).then(pages => {
+  pagesnumber(urlWeb).then((pages) => {
+    console.log(pages)
     const promises = []
-    //for (var i = 1; i <= pages; i++) {
-    for (var i = 1; i <= 1; i++) {
+    for (var i = 1; i <= 25; i++) {
+    // for (var i = 1; i <= 1; i++) {
       promises.push(getRestaurantsLinks(i))
     }
-    return Promise.all(promises)
-  }).then((links) => {
+    return Promise.all(promises.map(pReflect))
+  }).then((result) => {
+    links = result.filter(x => x.isFulfilled).map(x => x.value)
     const promises = []
 
     for (var i = 0; i < links.length; i++) {
@@ -24,14 +27,16 @@ exports.getAllRestaurant = (callback) => {
         promises.push(getDescription(links[i][j]))
       }
     }
-    return Promise.all(promises)
-  }).then(restaurants => {
+    return Promise.all(promises.map(pReflect))
+  }).then((result) => {
+    restaurants = result.filter(x => x.isFulfilled).map(x => x.value)
     //We save all these restaurant into a mongo database
     return mongodb.saveRestaurants(restaurants)
-  }).then(string => {
-    callback(null, string)
+  }).then((string) => {
+    return callback(null, string)
   }).catch(err => {
-    callback(err)
+    console.log(err)
+    return callback(err)
   })
 }
 
@@ -93,7 +98,7 @@ function getDescription(link) {
     request.get('https://restaurant.michelin.fr' + link, (err, res, body) => {
       if (err) reject("page access error : trying the description of a restaurant \n " + err)
 
-      console.log(link)
+      // console.log(link)
       const $ = cheerio.load(body, {
         decodeEntities: false
       })

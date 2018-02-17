@@ -20,12 +20,14 @@
   },
   "homepage": "https://github.com/LemaitreC/top-chef#readme",
   "dependencies": {
+    "assert": "^1.4.1",
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.2",
     "mongodb": "2.2.33",
     "p-map": "^1.2.0",
     "p-reflect": "^1.0.0",
     "request": "^2.83.0",
-    "restify": "4.1.1"
+    "restify": "4.1.1",
+    "string-similarity": "^1.2.0"
   }
 }

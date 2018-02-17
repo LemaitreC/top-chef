@@ -18,7 +18,7 @@ exports.saveRestaurants = (restaurants) => new Promise(function(resolve, reject)
         if (err) {
           reject(err);
         }
-        //console.log("Number of documents inserted: " + res.insertedCount);
+        console.log("Number of documents inserted: " + res.insertedCount);
         resolve("Number of documents inserted: " + res.insertedCount);
         db.close();
       })
@@ -44,20 +44,44 @@ exports.getRestaurants = (callback) => {
 }
 
 exports.getAllRestaurants = () => {
-    return new Promise(function(resolve, reject) {
-        mongo.connect('mongodb://top_chef:P4ssword@ds223578.mlab.com:23578/top-chef', function(err, db) {
-          if (err) {
-            reject(err)
-          }
-          db.collection("restaurants").find({}).toArray(function(err, docs) {
-            if (err) {
-              reject(err)
-            }
-            // console.log("Found the following records");
-            // console.log(docs)
-            resolve(docs)
-          });
-
-        })
+  return new Promise(function(resolve, reject) {
+    mongo.connect('mongodb://top_chef:P4ssword@ds223578.mlab.com:23578/top-chef', function(err, db) {
+      if (err) {
+        reject(err)
+      }
+      db.collection("restaurants").find({}).toArray(function(err, docs) {
+        if (err) {
+          reject(err)
+        }
+        // console.log("Found the following records");
+        // console.log(docs)
+        resolve(docs)
       })
-    }
+
+    })
+  })
+}
+
+exports.updateDiscount = (id, restDiscount, restaurantName) => {
+  return new Promise(function(resolve, reject) {
+    mongo.connect('mongodb://top_chef:P4ssword@ds223578.mlab.com:23578/top-chef', function(err, db) {
+      if (err) {
+        reject(err)
+      }
+      db.collection("restaurants").updateOne({
+        name: restaurantName
+      }, {
+        $set: {
+          idLaFourchette: id,
+          discount: restDiscount
+        }
+      }, function(err, result) {
+        if (err) {
+          reject(err)
+        }
+        resolve(result)
+      })
+
+    })
+  })
+}

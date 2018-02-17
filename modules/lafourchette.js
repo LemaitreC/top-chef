@@ -2,7 +2,8 @@ const request = require('request')
 const mongo = require('./mongodb')
 const pMap = require('p-map')
 const pReflect = require('p-reflect')
-
+const cheerio = require('cheerio')
+const stringSimilarity = require('string-similarity');
 
 /** Gets all the restaurants available on lafourchette.com for a specific name
  * @param {string} name - name/keyword of the restaurant we're looking for
@@ -24,24 +25,25 @@ const pReflect = require('p-reflect')
 //     return callback(new Error(err))
 //   })
 // }
+
+/* Search by autocomplete */
 function searchAutoRestaurant(currentRestaurant) {
   return new Promise(function(resolve, reject) {
     name = escape(encodeURIComponent(currentRestaurant.name))
-    const url = `https://www.lafourchette.com/recherche/autocomplete?searchText=`+name;
+    const url = `https://www.lafourchette.com/recherche/autocomplete?searchText=` + name;
     getRestaurant(url).then(function(restaurants) {
       return findRestaurant(currentRestaurant, restaurants, currentRestaurant.address.zipcode)
     }).then(function(restaurant) {
       return getDescrciption(restaurant)
     }).then(function(data) {
-       resolve(data)
+      resolve(data)
 
     }).catch(function(err) {
-       reject(err)
+      reject(err)
     })
 
   })
 }
-
 /** Gets all the restaurants available on lafourchette.com from a get http request (auto complete)
  * @param {string} url - the url to make the resquest from.
  */
@@ -62,7 +64,7 @@ function getRestaurant(url) {
  */
 function findRestaurant(current, restaurants, zipcode) {
   return new Promise(function(resolve, reject) {
-  //console.log(restaurants)
+    //console.log(restaurants)
     if (restaurants.length <= 0) reject("Error : No restaurant were found")
     var restaurant = restaurants.find(function(restaurant) {
       return restaurant.zipcode === zipcode
@@ -78,7 +80,7 @@ function findRestaurant(current, restaurants, zipcode) {
  */
 function getDescrciption(currentRestaurant) {
   return new Promise(function(resolve, reject) {
-    let id =currentRestaurant.idLaFourchette
+    let id = currentRestaurant.idLaFourchette
     const url = `https://www.lafourchette.com/reservation/module/date-list/${id}`
 
     request.get(url, function(err, res, body) {
@@ -89,16 +91,37 @@ function getDescrciption(currentRestaurant) {
   })
 }
 
-exports.addDiscounts = function(callback) {
-  mongo.getAllRestaurants().then(function(data) {
 
-    const promises = []
-    data.forEach(function(restaurant) {
-      promises.push(searchAutoRestaurant(restaurant))
-    })
-    Promise.all(promises.map(pReflect)).then(result =>{
-      restaurants =  result.filter(x => x.isFulfilled).map(x => x.value)
-      callback(null,restaurants)
-    })
+exports.addDiscounts = function(callback) {
+mongo.getAllRestaurants().then(function(data) {
+
+  const promises = []
+  let restaurants
+  let other
+  data.forEach(function(restaurant) {
+    promises.push(searchAutoRestaurant(restaurant))
   })
+
+  return Promise.all(promises.map(pReflect))
+}).then((result) => {
+  restaurants = result.filter(x => x.isFulfilled).map(x => x.value)
+  other = result.filter(x => x.isRejected).map(x => x.value)
+  const promises2 = []
+  promises2.push(restaurants)
+  promises2.push(other)
+  for (var r in restaurants) {
+    promises2.push(mongo.updateDiscount(restaurants[r].idLaFourchette, restaurants[r].discount, restaurants[r].name))
+  }
+
+  return pMap(promises2, pReflect, { concurrency: 100})
+  // return result
+}).then((res) => {
+//  console.log(restaurants.length)
+  console.log(res)
+
+callback(null, res)
+}).catch((err) => {
+  ///console.log(err)
+  callback(err)
+})
 }
