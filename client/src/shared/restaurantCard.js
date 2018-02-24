@@ -7,19 +7,28 @@ import {Row, Col,Card , Avatar} from 'antd';
 const { Meta } = Card;
 
 
-const RestaurantCard = ({props}) =>{
+const RestaurantCard = ({restaurant}) =>{
   return (
-    <Col span={5} >    <Card
+    <Col span={5} >
+    {restaurant.discount[0]
+      ? (<h3 className="discountTitle">{restaurant.discount[0].title.toUpperCase()}</h3>)
+      : <div></div>
+    }
+    <Card
    hoverable
    cover={<img alt="example"  src="https://restaurant.michelin.fr/sites/mtpb2c_fr/files/styles/poi_detail_landscape/public/iISK-1u8sxhxOIPA.jpg" />}
  >
+
      <Meta
-       title="name"
-       description="www.instagram.com"
-       avatar={<Avatar src={hotel1} size="large" shape="square" />}
+       title={restaurant.name}
+       description={restaurant.address.street+", " + restaurant.address.town.toUpperCase()}
+       avatar={<Avatar src={ restaurant.stars == 1 ? hotel1 : restaurant.stars == 2 ? hotel2 : hotel3} style={{width:50,height:50}} shape="square" />}
+       />
 
-     />
-
+       {restaurant.discount[0]
+         ? (<p className="exclu">{restaurant.discount[0].exclusions}</p>)
+         : <div></div>
+       }
    </Card>
    </Col>
   );

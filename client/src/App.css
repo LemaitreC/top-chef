@@ -23,48 +23,52 @@
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @import '~antd/dist/antd.css';
-
 /* Globals */
 
 body {
-    background: #f5f5f5;
-    color: #616161;
+  background: #f5f5f5;
+  color: #616161;
 }
 
 .ant-btn-primary {
-    background-color: rgba(22, 160, 133, .6);
-    border: none;
+  background-color: rgba(22, 160, 133, .6);
+  border: none;
 }
 
 .ant-btn-primary:hover {
-    background-color: rgba(22, 160, 133, 1);
+  background-color: rgba(22, 160, 133, 1);
 }
 
 .ant-btn-primary[disabled] {
-    background-color: rgba(22, 160, 133, .4);
-    border-color: rgba(22, 160, 133, .4);
-    color: #fff;
+  background-color: rgba(22, 160, 133, .4);
+  border-color: rgba(22, 160, 133, .4);
+  color: #fff;
 }
 
 .ant-btn-primary[disabled]:hover {
-    background-color: rgba(22, 160, 133, .4);
-    border-color: rgba(22, 160, 133, .4);
-    color: #fff;
+  background-color: rgba(22, 160, 133, .4);
+  border-color: rgba(22, 160, 133, .4);
+  color: #fff;
 }
 
 .txt-highlight {
-    color: rgba(22, 160, 133, 1);
+  color: rgba(22, 160, 133, 1);
 }
 
 .ant-spin {
   padding-top: 2%;
   color: rgba(22, 160, 133, 1);
 }
+
 .ant-spin-dot i {
   background-color: rgba(22, 160, 133, 1);
 }
@@ -72,53 +76,72 @@ body {
 /* Header */
 
 .header {
-    background: rgba(22, 160, 133, .6);
-    min-height: 200px;
-    display: flex;
-    align-items: center;
-    text-align: center;
+  background: rgba(22, 160, 133, .6);
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  text-align: center;
 }
 
 .header h1 {
-    color: #FFF;
+  color: #FFF;
 }
 
 .header i {
-    color: #FFF;
+  color: #FFF;
 }
 
 .header .ant-row {
-    width: 100%;
+  width: 100%;
 }
-
 
 /* Content */
 
 .content {
-    min-height: 100vh;
-    padding: 4% 20px;
-    text-align: center;
+  min-height: 100vh;
+  padding: 4% 20px;
+  text-align: center;
 }
 
 .content .lead-txt {
-    text-align: center;
-    font-size: 15px;
+  text-align: center;
+  font-size: 15px;
 }
 
 .form {
-    text-align: center;
-    padding-top: 1%;
+  text-align: center;
+  padding-top: 1%;
 }
-.ant-col-5{
+
+.ant-col-5 {
   margin-bottom: 2em;
 }
 
+.discountTitle {
+  margin-bottom: 0;
+  padding: 0.5em;
+  background: #fd392b70;
+  color: #fdf1f1;
+  position: absolute;
+z-index: 2;
+}
+
+.emptyTitle {
+  margin-bottom: 0;
+  padding: 0.5em;
+}
+
+.exclu{
+  color :#90036a;
+  margin-top: 1em;
+  font-weight: 500;
+}
 
 /* Footer */
 
 .footer {
-    background: #3e3e3e;
-    padding: 20px 0;
-    text-align: center;
-    color: #FFF;
+  background: #3e3e3e;
+  padding: 20px 0;
+  text-align: center;
+  color: #FFF;
 }

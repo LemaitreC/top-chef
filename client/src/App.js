@@ -4,7 +4,6 @@ import './App.css';
 import { Layout, Row, Col, Card, Avatar} from 'antd';
 import Loading from './shared/loading';
 import RestaurantCard from './shared/restaurantCard';
-import axios from 'axios';
 const { Header, Footer, Sider, Content } = Layout;
 
 const DemoBox = props => <p className={`height-${props.value}`}>{props.children}</p>;
@@ -22,19 +21,6 @@ class App extends Component {
   handleLoadingState = (loading) =>{
     this.setState({loading:loading});
   }
-
-  // getRestaurants = () =>{
-  //   console.log("ee")
-  //   axios.get('http://localhost:8081/restaurants')
-  //   .then(function (response) {
-  //
-  //     console.log(response);
-  //     this.handleLoadingState(true);
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //   });
-  // }
 
 componentDidMount() {
   fetch(API).then(res =>{
@@ -69,7 +55,7 @@ componentDidMount() {
             <Row gutter={48} type="flex" justify="space-around">
 
             {restaurants.map(res =>
-                <RestaurantCard name="eee" />
+                <RestaurantCard restaurant={res} />
               )}
 
             </Row>
