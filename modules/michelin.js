@@ -13,7 +13,7 @@ exports.getAllRestaurant = (callback) => {
   pagesnumber(urlWeb).then((pages) => {
     console.log(pages)
     const promises = []
-    for (var i = 1; i <= 25; i++) {
+    for (var i = 1; i <= pages; i++) {
     // for (var i = 1; i <= 1; i++) {
       promises.push(getRestaurantsLinks(i))
     }
@@ -29,6 +29,7 @@ exports.getAllRestaurant = (callback) => {
     }
     return Promise.all(promises.map(pReflect))
   }).then((result) => {
+    console.log(result.length)
     restaurants = result.filter(x => x.isFulfilled).map(x => x.value)
     //We save all these restaurant into a mongo database
     return mongodb.saveRestaurants(restaurants)
@@ -126,7 +127,7 @@ function getDescription(link) {
         item.grade.rateQualityPrice = parseFloat($('#node_poi-review-wrapper > div.node_poi-review.node_poi-row > div.node_poi-restaurant-rating > div:nth-child(4) > div.poi_node-items-rating > span.avg-rating-points').text())
         item.grade.ambiance = parseFloat($('#node_poi-review-wrapper > div.node_poi-review.node_poi-row > div.node_poi-restaurant-rating > div:nth-child(5) > div.poi_node-items-rating > span.avg-rating-points').text())
         item.grade.drinks = parseFloat($('#node_poi-review-wrapper > div.node_poi-review.node_poi-row > div.node_poi-restaurant-rating > div:nth-child(6) > div.poi_node-items-rating > span.avg-rating-points').text())
-        item.discount ={}
+        item.discount =[]
 
         resolve(item)
       } else {

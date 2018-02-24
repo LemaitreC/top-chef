@@ -30,14 +30,19 @@ const stringSimilarity = require('string-similarity');
 function searchAutoRestaurant(currentRestaurant) {
   return new Promise(function(resolve, reject) {
     name = escape(encodeURIComponent(currentRestaurant.name))
-    const url = `https://www.lafourchette.com/recherche/autocomplete?searchText=` + name;
+    //the query doesn't work if it's too long so we check if the name is bigger than 49
+    if (name.length > 49) {
+      //if it is we short the name
+      name = name.substring(0, 50)
+    }
+    const url = `https://m.lafourchette.com/api/restaurant-prediction?name=` + name;
     getRestaurant(url).then(function(restaurants) {
       return findRestaurant(currentRestaurant, restaurants, currentRestaurant.address.zipcode)
     }).then(function(restaurant) {
       return getDescrciption(restaurant)
     }).then(function(data) {
       resolve(data)
-
+      console.log("ee")
     }).catch(function(err) {
       reject(err)
     })
@@ -49,9 +54,15 @@ function searchAutoRestaurant(currentRestaurant) {
  */
 function getRestaurant(url) {
   return new Promise(function(resolve, reject) {
-    request.get(url, function(err, res, body) {
+    const config = {
+      'uri': url,
+      'headers': {
+        'cookie': 'datadome=AHrlqAAAAAMAKsjo1_t5VGEALtotww'
+      }
+    }
+    request.get(config, function(err, res, body) {
       if (err) reject(err)
-      restaurants = JSON.parse(body).data.restaurants
+      restaurants = JSON.parse(body)
       resolve(restaurants)
     })
   })
@@ -64,14 +75,25 @@ function getRestaurant(url) {
  */
 function findRestaurant(current, restaurants, zipcode) {
   return new Promise(function(resolve, reject) {
+    console.log("current :")
+    // console.log(current)
+    // console.log(zipcode)
     //console.log(restaurants)
-    if (restaurants.length <= 0) reject("Error : No restaurant were found")
-    var restaurant = restaurants.find(function(restaurant) {
-      return restaurant.zipcode === zipcode
-    })
-    if (restaurant == null) reject("Error : No restaurant are corresponding to zipcode")
-    current.idLaFourchette = restaurant.id_restaurant
-    resolve(current)
+    if (restaurants.length <= 0) {
+      reject(new Error("Error : No restaurant were found"))
+    } else {
+      const restaurant = restaurants.find(function(restaurant) {
+        return restaurant.address.postal_code === zipcode
+      })
+
+
+      if (restaurant == null) {
+        console.log("no match")
+        reject(new Error("Error : No restaurant are corresponding to zipcode"))}
+      console.log(restaurant)
+      current.idLaFourchette = restaurant.id
+      resolve(current)
+    }
   })
 }
 
@@ -81,11 +103,17 @@ function findRestaurant(current, restaurants, zipcode) {
 function getDescrciption(currentRestaurant) {
   return new Promise(function(resolve, reject) {
     let id = currentRestaurant.idLaFourchette
-    const url = `https://www.lafourchette.com/reservation/module/date-list/${id}`
-
-    request.get(url, function(err, res, body) {
+    const url = `https://m.lafourchette.com/api/restaurant/${id}/sale-type`
+    const config = {
+      'uri': url,
+      'headers': {
+        'cookie': 'datadome=AHrlqAAAAAMAKsjo1_t5VGEALtotww'
+      }
+    }
+    request.get(config, function(err, res, body) {
       if (err) reject(err)
-      currentRestaurant.discount = JSON.parse(body).data.bestSaleTypeAvailable
+       console.log(body)
+      currentRestaurant.discount = JSON.parse(body)
       resolve(currentRestaurant)
     })
   })
@@ -93,35 +121,37 @@ function getDescrciption(currentRestaurant) {
 
 
 exports.addDiscounts = function(callback) {
-mongo.getAllRestaurants().then(function(data) {
+  mongo.getAllRestaurants().then(function(data) {
 
-  const promises = []
-  let restaurants
-  let other
-  data.forEach(function(restaurant) {
-    promises.push(searchAutoRestaurant(restaurant))
+    const promises = []
+    let restaurants
+    let other
+    data.forEach(function(restaurant) {
+      promises.push(searchAutoRestaurant(restaurant))
+    })
+
+    return Promise.all(promises.map(pReflect))
+  }).then((result) => {
+    restaurants = result.filter(x => x.isFulfilled).map(x => x.value)
+    other = result.filter(x => x.isRejected).map(x => x.value)
+    const promises2 = []
+    promises2.push(restaurants)
+    promises2.push(other)
+    for (var r in restaurants) {
+      promises2.push(mongo.updateDiscount(restaurants[r].idLaFourchette, restaurants[r].discount, restaurants[r].name))
+    }
+
+    return pMap(promises2, pReflect, {
+      concurrency: 100
+    })
+    // return result
+  }).then((res) => {
+    //  console.log(restaurants.length)
+    console.log(res)
+
+    callback(null, res)
+  }).catch((err) => {
+    ///console.log(err)
+    callback(err)
   })
-
-  return Promise.all(promises.map(pReflect))
-}).then((result) => {
-  restaurants = result.filter(x => x.isFulfilled).map(x => x.value)
-  other = result.filter(x => x.isRejected).map(x => x.value)
-  const promises2 = []
-  promises2.push(restaurants)
-  promises2.push(other)
-  for (var r in restaurants) {
-    promises2.push(mongo.updateDiscount(restaurants[r].idLaFourchette, restaurants[r].discount, restaurants[r].name))
-  }
-
-  return pMap(promises2, pReflect, { concurrency: 100})
-  // return result
-}).then((res) => {
-//  console.log(restaurants.length)
-  console.log(res)
-
-callback(null, res)
-}).catch((err) => {
-  ///console.log(err)
-  callback(err)
-})
 }

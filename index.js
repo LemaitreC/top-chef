@@ -1,6 +1,7 @@
 const lafourchette = require('./modules/lafourchette')
 const michelin = require('./modules/michelin')
 const mongo = require('./modules/mongodb')
+const CookieParser = require('restify-cookies');
 
 //p_map
 //p-settle
@@ -9,6 +10,15 @@ const mongo = require('./modules/mongodb')
 // importing the 'restify' module and create an instance.
 const restify = require('restify')
 const server = restify.createServer()
+server.use(CookieParser.parse);
+
+server.use(
+  function crossOrigin(req,res,next){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    return next();
+  }
+);
 
 // michelin.getAllRestaurant((err,data)=>{
 //   console.log("Status :" +data)
@@ -34,6 +44,8 @@ const status = {
 	'unauthorised': 401,
 	'notFound': 404
 }
+
+
 
 const defaultPort = 8081
 
@@ -93,6 +105,7 @@ server.get('/discount/:name/:zipcode', function(req, res) {
 
 server.get('/updateDiscounts', function(req, res) {
 	lafourchette.addDiscounts( (err, data) => {
+		res.setCookie('datadome', 'AHrlqAAAAAMAKsjo1_t5VGEALtotww==', {});
 		res.setHeader('content-type', 'application/json')
 		res.setHeader('accepts', 'GET')
 		if (err) {
