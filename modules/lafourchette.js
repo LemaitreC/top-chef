@@ -3,7 +3,6 @@ const mongo = require('./mongodb')
 const pMap = require('p-map')
 const pReflect = require('p-reflect')
 const cheerio = require('cheerio')
-const stringSimilarity = require('string-similarity');
 
 /** Gets all the restaurants available on lafourchette.com for a specific name
  * @param {string} name - name/keyword of the restaurant we're looking for
