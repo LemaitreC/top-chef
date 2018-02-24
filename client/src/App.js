@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {Row, Col, Card, Avatar} from 'antd';
+import { Layout, Row, Col, Card, Avatar} from 'antd';
 import Loading from './shared/loading';
-import RestaurantCard from './shared/loading';
+import RestaurantCard from './shared/restaurantCard';
 import axios from 'axios';
+const { Header, Footer, Sider, Content } = Layout;
 
-
-const API = 'http://192.168.0.11:8081/'
+const DemoBox = props => <p className={`height-${props.value}`}>{props.children}</p>;
+const API = 'http://localhost:8081/'
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      loading: true, restaurants: [],error : null
+      loading: true, restaurants: [], error : null
     }
 
   }
@@ -36,10 +37,12 @@ class App extends Component {
   // }
 
 componentDidMount() {
-  fetch(API, {mode: 'no-cors'}).then(res =>{
+  fetch(API).then(res =>{
     if (res.ok) {
+      console.log("The result is ok ")
          return res.json();
        } else {
+         console.log("OH FUCK")
          throw new Error('Something went wrong ...');
        }
   }).then( data =>this.setState({
@@ -52,27 +55,30 @@ componentDidMount() {
     const { loading, restaurants, error} = this.state;
 
     return (
-      <div className="App">
-        <header className="header">
+      <Layout className="App">
+        <Header className="header">
           <Row>
             <i className="material_icons">star</i>
             <h1>Starred Restaurants with great discount </h1>
 
           </Row>
-        </header>
+        </Header>
+        <Layout>
+          <Sider>Sider</Sider>
+          <Content className="content">
+            <Row gutter={48} type="flex" justify="space-around">
 
-        <section className="content">
-          <Row>
-              <RestaurantCard />
+            {restaurants.map(res =>
+                <RestaurantCard name="eee" />
+              )}
 
-
-          </Row>
-
-        </section>
-        <footer className="footer">
+            </Row>
+          </Content>
+        </Layout>
+        <Footer className="footer">
           Corentin LEMAITRE 2018
-        </footer>
-      </div>
+        </Footer>
+        </Layout>
     );
   }
 }
