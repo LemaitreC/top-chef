@@ -41,7 +41,6 @@ function searchAutoRestaurant(currentRestaurant) {
       return getDescrciption(restaurant)
     }).then(function(data) {
       resolve(data)
-      console.log("ee")
     }).catch(function(err) {
       reject(err)
     })
@@ -74,10 +73,6 @@ function getRestaurant(url) {
  */
 function findRestaurant(current, restaurants, zipcode) {
   return new Promise(function(resolve, reject) {
-    console.log("current :")
-    // console.log(current)
-    // console.log(zipcode)
-    //console.log(restaurants)
     if (restaurants.length <= 0) {
       reject(new Error("Error : No restaurant were found"))
     } else {
@@ -87,7 +82,6 @@ function findRestaurant(current, restaurants, zipcode) {
 
 
       if (restaurant == null) {
-        console.log("no match")
         reject(new Error("Error : No restaurant are corresponding to zipcode"))}
       console.log(restaurant)
       current.idLaFourchette = restaurant.id
@@ -111,7 +105,6 @@ function getDescrciption(currentRestaurant) {
     }
     request.get(config, function(err, res, body) {
       if (err) reject(err)
-       console.log(body)
       currentRestaurant.discount = JSON.parse(body)
       resolve(currentRestaurant)
     })
@@ -145,9 +138,6 @@ exports.addDiscounts = function(callback) {
     })
     // return result
   }).then((res) => {
-    //  console.log(restaurants.length)
-    console.log(res)
-
     callback(null, res)
   }).catch((err) => {
     ///console.log(err)

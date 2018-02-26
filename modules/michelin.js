@@ -14,7 +14,7 @@ exports.getAllRestaurant = (callback) => {
     console.log(pages)
     const promises = []
     for (var i = 1; i <= pages; i++) {
-    // for (var i = 1; i <= 1; i++) {
+      // for (var i = 1; i <= 1; i++) {
       promises.push(getRestaurantsLinks(i))
     }
     return Promise.all(promises.map(pReflect))
@@ -93,7 +93,7 @@ function getRestaurantsLinks(page) {
 
 /** Gets data from the restaurant page description by scrapping the page.
  * @param {string} link - url of the restaurant page description on which to scrap data
-*/
+ */
 function getDescription(link) {
   return new Promise(function(resolve, reject) {
     request.get('https://restaurant.michelin.fr' + link, (err, res, body) => {
@@ -112,7 +112,8 @@ function getDescription(link) {
         item.name = clean($(pagePath + '> div.panels-content-main.panels-content-main_regionone > div > div.panels-content-main-left > div > div > div > div > h1').text())
         item.stars = parseInt($('#node_poi-guide-wrapper > div.node_poi-distinction-section > ul > li:nth-child(1) > div.content-wrapper').text().charAt(0))
         item.url = link
-        item.idLaFourchette= null
+        item.idLaFourchette = null
+
         item.address = {}
         item.address.street = clean($(pagePath + ' > div.panels-content-main.panels-content-main_regionone > div > div.panels-content-main-left > div > div > div > div > div.poi_intro-display-address > div > div > div > div.street-block > div').text())
         item.address.zipcode = $(pagePath + ' > div.panels-content-main.panels-content-main_regionone > div > div.panels-content-main-left > div > div > div > div > div.poi_intro-display-address > div > div > div > div.addressfield-container-inline.locality-block.country-FR > span.postal-code').text()
@@ -127,8 +128,14 @@ function getDescription(link) {
         item.grade.rateQualityPrice = parseFloat($('#node_poi-review-wrapper > div.node_poi-review.node_poi-row > div.node_poi-restaurant-rating > div:nth-child(4) > div.poi_node-items-rating > span.avg-rating-points').text())
         item.grade.ambiance = parseFloat($('#node_poi-review-wrapper > div.node_poi-review.node_poi-row > div.node_poi-restaurant-rating > div:nth-child(5) > div.poi_node-items-rating > span.avg-rating-points').text())
         item.grade.drinks = parseFloat($('#node_poi-review-wrapper > div.node_poi-review.node_poi-row > div.node_poi-restaurant-rating > div:nth-child(6) > div.poi_node-items-rating > span.avg-rating-points').text())
-        item.discount =[]
+        item.discount = []
 
+        const photo ='#flexslider_views_slideshow_poi_image_slideshow-restaurant_slideshow > li.flexslider-views-slideshow-main-frame-row.flexslider_views_slideshow_slide.views-row-1'
+        if ($('#node_poi-photos-wrapper')) {
+          item.photo = $(photo).children().children().children().text().split("\"")[3]
+        } else {
+          item.photo = "https://restaurant.michelin.fr/sites/mtpb2c_fr/themes/mtpb2c/custom/michelin/img/defaultImage_big.jpg"
+        }
         resolve(item)
       } else {
         reject(new Error("unable to access description of the restaurant" + link))
