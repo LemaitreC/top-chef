@@ -16,7 +16,7 @@ const RestaurantCard = ({restaurant}) =>{
     }
     <Card
    hoverable
-   cover={<img alt="example"  src="https://restaurant.michelin.fr/sites/mtpb2c_fr/files/styles/poi_detail_landscape/public/iISK-1u8sxhxOIPA.jpg" />}
+   cover={<img alt="example"   src={restaurant.photo != null ? restaurant.photo : "https://restaurant.michelin.fr/sites/mtpb2c_fr/themes/mtpb2c/custom/michelin/img/defaultImage_big.jpg" } />}
  >
 
      <Meta

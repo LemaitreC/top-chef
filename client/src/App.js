@@ -52,7 +52,7 @@ componentDidMount() {
         <Layout>
           <Sider>Sider</Sider>
           <Content className="content">
-            <Row gutter={48} type="flex" justify="space-around">
+            <Row gutter={48} type="flex" justify="space-around" align="center">
 
             {restaurants.map(res =>
                 <RestaurantCard restaurant={res} />

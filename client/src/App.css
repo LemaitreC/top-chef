@@ -118,12 +118,17 @@ body {
 }
 
 .discountTitle {
-  margin-bottom: 0;
+  margin:1px;
   padding: 0.5em;
-  background: #fd392b70;
+  background: #8e241cf0;
   color: #fdf1f1;
   position: absolute;
 z-index: 2;
+
+}
+
+.ant-card-cover > *{
+      max-height: 15em;
 }
 
 .emptyTitle {
