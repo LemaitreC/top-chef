@@ -7,7 +7,7 @@ import RestaurantCard from './shared/restaurantCard';
 const { Header, Footer, Sider, Content } = Layout;
 
 const DemoBox = props => <p className={`height-${props.value}`}>{props.children}</p>;
-const API = 'http://localhost:8081/'
+const API = 'http://localhost:8081/restaurantDiscount/all/0'
 
 class App extends Component {
   constructor(props){
@@ -15,7 +15,6 @@ class App extends Component {
     this.state = {
       loading: true, restaurants: [], error : null
     }
-
   }
 
   handleLoadingState = (loading) =>{

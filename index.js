@@ -62,45 +62,6 @@ server.get('/restaurants', function(req, res) {
 	})
 })
 
-
-server.get('/', function(req, res) {
-	mongo.getRestaurants( (err, data) => {
-		res.setHeader('content-type', 'application/json')
-		res.setHeader('accepts', 'GET')
-		if (err) {
-			res.send(status.badRequest, {
-				error: err.message
-			})
-		} else {
-			res.send(status.ok, data)
-		}
-		res.end()
-	})
-})
-
-
-
-server.get('/discount/:name/:zipcode', function(req, res) {
-	if(!req.params.name || !req.params.zipcode){
-		res.send(status.badRequest, {
-			error: "Wrong params request"
-		})
-	}
-	lafourchette.matchRestaurant(req.params.name,req.params.zipcode, (err, data) => {
-		res.setHeader('content-type', 'application/json')
-		res.setHeader('accepts', 'GET')
-		if (err) {
-			res.send(status.badRequest, {
-				error: err.message
-			})
-		} else {
-			res.send(status.ok, data)
-		}
-		res.end()
-	})
-})
-
-
 server.get('/updateDiscounts', function(req, res) {
 	lafourchette.addDiscounts( (err, data) => {
 		res.setHeader('content-type', 'application/json')
@@ -116,6 +77,26 @@ server.get('/updateDiscounts', function(req, res) {
 	})
 })
 
+
+server.get('/restaurantDiscount/:filter/:stars', function(req, res) {
+	if(!req.params.filter || !req.params.stars){
+		res.send(status.badRequest, {
+			error: "Wrong params request"
+		})
+	}
+	mongo.getRestaurants(req.params.filter,req.params.stars, (err, data) => {
+		res.setHeader('content-type', 'application/json')
+		res.setHeader('accepts', 'GET')
+		if (err) {
+			res.send(status.badRequest, {
+				error: err.message
+			})
+		} else {
+			res.send(status.ok, data)
+		}
+		res.end()
+	})
+})
 
 
 const port = process.env.PORT || defaultPort
