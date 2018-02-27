@@ -13,7 +13,9 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      loading: true, restaurants: [], error : null,
+      loading: true,
+      restaurants: [],
+      error : null,
         stars : 0 ,
         is_menu : false,
         is_brunch : false,
@@ -27,36 +29,31 @@ class App extends Component {
   }
 
 componentDidMount() {
-  console.log(this.state.api)
   fetch(this.state.api).then(res =>{
     if (res.ok) {
-      console.log("The result is ok ")
          return res.json();
        } else {
-         console.log("OH FUCK")
          throw new Error('Something went wrong ...');
        }
-  }).then( data =>this.setState({
-     loading:false, restaurants:data
-  })).catch(err => this.setState({ loading: false, restaurants:[] , error: err }));
+  }).then( data => this.setState({
+     restaurants:data
+  }, this.handleLoadingState(false))).catch(err => this.setState({ restaurants:[] , error: err }));
 }
 
 onStarsChange = (e) => {
-    this.setState({
-      stars: e.target.value,
-    });
-    this.setState({api:setAPIurl(e.target.value, this.state.is_menu, this.state.is_brunch, this.state.is_special_offer)},function () {
-    console.log(this.state.api)
-    this.componentDidMount()
-  })
-  }
+  this.setState({
+    stars: e.target.value,
+  });
+  this.setState({api:setAPIurl(e.target.value, this.state.is_menu, this.state.is_brunch, this.state.is_special_offer)},function () {
+  this.componentDidMount()
+})
+}
 
 checkSpecialOffer = (bool) =>{
   this.setState({
     is_special_offer: bool,
   });
   this.setState({api:  setAPIurl(this.state.stars, this.state.is_menu, this.state.is_brunch, bool)},function () {
-  console.log(this.state.api)
   this.componentDidMount()
 })
 }
@@ -66,7 +63,6 @@ checkBrunch = (bool) =>{
     is_brunch: bool,
   });
   this.setState({api:  setAPIurl(this.state.stars, this.state.is_menu, bool, this.state.is_special_offer)},function () {
-  console.log(this.state.api)
   this.componentDidMount()
 })
 }
@@ -76,7 +72,6 @@ checkMenu = (bool) =>{
     is_menu: bool,
   });
   this.setState({api:setAPIurl(this.state.stars, bool, this.state.is_brunch, this.state.is_special_offer)},function () {
-  console.log(this.state.api)
   this.componentDidMount()
 })
 }
@@ -126,8 +121,9 @@ checkMenu = (bool) =>{
             </div>
           </Sider>
           <Content className="content">
-            <Row gutter={48} type="flex" justify="space-around" align="center">
+            {this.state.loading ? <Loading message="Working on it ..."/> : <div></div>}
 
+            <Row gutter={48} type="flex" justify="space-around" align="center">
             {restaurants.map(res =>
                 <RestaurantCard restaurant={res} />
               )}
