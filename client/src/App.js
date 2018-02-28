@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import { Layout, Row, Col, Card,  Radio, Input, Avatar,Switch, Icon, Button} from 'antd';
 import Loading from './shared/loading';
-import RestaurantCard from './shared/restaurantCard';
+import Deals from './shared/dealsCard';
 const { Header, Footer, Sider, Content } = Layout;
 const RadioGroup = Radio.Group;
 
@@ -14,7 +14,7 @@ class App extends Component {
     super(props);
     this.state = {
       loading: true,
-      restaurants: [],
+      deals: [],
       error : null,
         stars : 0 ,
         is_menu : false,
@@ -37,8 +37,8 @@ componentDidMount=() =>{
        }
        console.log("Discount loaded")
   }).then( data => this.setState({
-     restaurants:data
-  }, this.handleLoadingState(false))).catch(err => this.setState({ restaurants:[] , error: err }));
+     deals:data
+  }, this.handleLoadingState(false))).catch(err => this.setState({ deals:[] , error: err }));
 }
 
 loadDiscount = () =>{
@@ -90,21 +90,21 @@ checkMenu = (bool) =>{
           lineHeight: '30px',
           color:'white'
         };
-    const { loading, restaurants, error } = this.state;
+    const { loading, deals, error } = this.state;
 
     return (
       <Layout className="App">
         <Header className="header">
           <Row>
             <Icon type="star" className="icon" size="large"/>
-            <h1>Starred Restaurants with great discount </h1>
+            <h1>Starred deals with great discount </h1>
 
           </Row>
         </Header>
         <Layout>
           <Sider>
            <Button type="primary" icon="download" size="large" onClick={this.loadDiscount}>Reload data</Button>
-           {restaurants.length>0 ? <div className="date"><p>Last update : </p><p> {restaurants[0].lastUpdate.substring(0,26)} </p></div>: <p></p>}
+           {deals.length>0 ? <div className="date"><p>Last update : </p><p> {deals[0].lastUpdate.substring(0,26)} </p></div>: <p></p>}
             <h3 className="filter">Filters</h3>
             <RadioGroup onChange={this.onStarsChange} value={this.state.stars}>
               <Radio style={radioStyle} value={0}>All Starred</Radio>
@@ -129,14 +129,15 @@ checkMenu = (bool) =>{
               </div>
             </div>
 
-            <h2 className="result">{restaurants.length} results</h2>
+            <h2 className="result">{deals.length} deals</h2>
           </Sider>
           <Content className="content">
             {this.state.loading ? <Loading message="Working on it ..."/> :
               <Row gutter={48} type="flex" justify="space-around" align="center">
-              {restaurants.map(res =>
-                  <RestaurantCard restaurant={res} />
-                )}
+              {deals.map(res =>
+                <Deals deal={res}/>
+                )
+              }
               </Row>
             }
           </Content>
@@ -150,10 +151,10 @@ checkMenu = (bool) =>{
 }
 
 function setAPIurl(stars, is_menu, is_brunch, is_special_offer){
-  let filter =""
-    filter = is_menu ? "menu" : "_"
-    filter+= is_brunch ? "brunch": "_"
-    filter +=  is_special_offer ? "special_offer" : "_"
+  let filter ="all"
+    filter += is_menu ? "_menu" : ""
+    filter+= is_brunch ? "_brunch": ""
+    filter +=  is_special_offer ? "_special_offer" : ""
 
   console.log(filter)
   return API + "restaurantDiscount/"+filter+"/"+stars;

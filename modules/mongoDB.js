@@ -32,15 +32,25 @@ exports.getRestaurants = (filter, stars, callback) => {
       callback(err, null)
     }
 
-    const config = getconfig(filter, stars)
+    const config = getconfig(stars)
 
     db.collection("restaurants").find(config).toArray(function(err, docs) {
       if (err) {
         callback(err, null)
       }
-      console.log("Found the following records");
-      console.log(docs)
-      callback(null, docs)
+      let deals = []
+
+      for (var i = 0; i < docs.length; i++) {
+        for (var j = 0; j < docs[i].discount.length; j++) {
+
+          var restaurant = JSON.parse(JSON.stringify(docs[i]));
+          restaurant.discount=  docs[i].discount[j]
+          if(setFilter(restaurant,filter)){
+            deals.push(restaurant)
+          }
+        }
+      }
+      callback(null, deals)
     });
 
   })
@@ -65,7 +75,7 @@ exports.getAllRestaurants = () => {
   })
 }
 
-exports.updateDiscount = (id, restDiscount, restaurantName,update) => {
+exports.updateDiscount = (id, restDiscount, restaurantName, update) => {
   return new Promise(function(resolve, reject) {
     mongo.connect('mongodb://top_chef:P4ssword@ds223578.mlab.com:23578/top-chef', function(err, db) {
       if (err) {
@@ -77,7 +87,7 @@ exports.updateDiscount = (id, restDiscount, restaurantName,update) => {
         $set: {
           idLaFourchette: id,
           discount: restDiscount,
-          lastUpdate : update.toUTCString()
+          lastUpdate: update.toUTCString()
         }
       }, function(err, result) {
         if (err) {
@@ -90,24 +100,9 @@ exports.updateDiscount = (id, restDiscount, restaurantName,update) => {
   })
 }
 
-function getconfig(filter, stars) {
-
+function getconfig( stars) {
   let config = {}
-  // Give only restaurant with discounts
   config.discount = { $gt: [] }
-
-  if (filter != "all") {
-
-    if (filter.includes("special_offer")){
-      config["discount.0.is_special_offer"] = true
-    }
-    if (filter.includes("menu")) {
-      config["discount.0.is_menu"] = true
-    }
-    if (filter.includes('brunch')) {
-      config["discount.0.is_brunch"]  = true
-    }
-  }
   switch (stars) {
     case "1":
       config.stars = 1
@@ -122,7 +117,40 @@ function getconfig(filter, stars) {
 
       break;
   }
-  console.log(config)
-
   return config
+}
+
+function setFilter(restaurant,filter){
+let bool = true
+
+  if (filter != "all") {
+    bool = false
+    if (filter.includes("special_offer")){
+      if( restaurant.discount.is_special_offer){
+        // console.log("special offer")
+        bool =true
+      }else{
+        return false
+      }
+
+    }
+    if (filter.includes("menu")) {
+      if( restaurant.discount.is_menu){
+        // console.log("special offer")
+        bool =true
+      }else{
+        return false
+      }
+    }
+    if (filter.includes('brunch') ) {
+      if(restaurant.discount.is_brunch){
+        // console.log("special offer")
+        bool =true
+      }else{
+        return false
+      }
+    }
+  }
+
+  return bool
 }
