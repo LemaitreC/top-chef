@@ -65,7 +65,7 @@ exports.getAllRestaurants = () => {
   })
 }
 
-exports.updateDiscount = (id, restDiscount, restaurantName) => {
+exports.updateDiscount = (id, restDiscount, restaurantName,update) => {
   return new Promise(function(resolve, reject) {
     mongo.connect('mongodb://top_chef:P4ssword@ds223578.mlab.com:23578/top-chef', function(err, db) {
       if (err) {
@@ -76,7 +76,8 @@ exports.updateDiscount = (id, restDiscount, restaurantName) => {
       }, {
         $set: {
           idLaFourchette: id,
-          discount: restDiscount
+          discount: restDiscount,
+          lastUpdate : update.toUTCString()
         }
       }, function(err, result) {
         if (err) {

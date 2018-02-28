@@ -42,7 +42,8 @@ function searchAutoRestaurant(currentRestaurant) {
     }).then(function(data) {
       resolve(data)
     }).catch(function(err) {
-      reject(err)
+      // console.log(err)
+      // reject(err)
     })
 
   })
@@ -59,7 +60,7 @@ function getRestaurant(url) {
       }
     }
     request.get(config, function(err, res, body) {
-      if (err) reject(err)
+      if (err) reject(new Error("GET Restaurant Error :" +err))
       restaurants = JSON.parse(body)
       resolve(restaurants)
     })
@@ -83,7 +84,7 @@ function findRestaurant(current, restaurants, zipcode) {
 
       if (restaurant == null) {
         reject(new Error("Error : No restaurant are corresponding to zipcode"))}
-      console.log(restaurant)
+      // console.log(restaurant)
       current.idLaFourchette = restaurant.id
       resolve(current)
     }
@@ -114,7 +115,7 @@ function getDescrciption(currentRestaurant) {
 
 exports.addDiscounts = function(callback) {
   mongo.getAllRestaurants().then(function(data) {
-
+    console.log("Updating Discounts")
     const promises = []
     let restaurants
     let other
@@ -122,15 +123,20 @@ exports.addDiscounts = function(callback) {
       promises.push(searchAutoRestaurant(restaurant))
     })
 
-    return Promise.all(promises.map(pReflect))
+    return pMap(promises, pReflect,{
+      concurrency: 10
+    })
   }).then((result) => {
     restaurants = result.filter(x => x.isFulfilled).map(x => x.value)
     other = result.filter(x => x.isRejected).map(x => x.value)
     const promises2 = []
-    promises2.push(restaurants)
-    promises2.push(other)
+    // promises2.push(restaurants)
+    // promises2.push(other)
+    console.log("NUMBER OF ERROR: " + other.length)
+    const date = new Date()
+    console.log(date)
     for (var r in restaurants) {
-      promises2.push(mongo.updateDiscount(restaurants[r].idLaFourchette, restaurants[r].discount, restaurants[r].name))
+      promises2.push(mongo.updateDiscount(restaurants[r].idLaFourchette, restaurants[r].discount, restaurants[r].name, date))
     }
 
     return pMap(promises2, pReflect, {
@@ -140,7 +146,7 @@ exports.addDiscounts = function(callback) {
   }).then((res) => {
     callback(null, res)
   }).catch((err) => {
-    ///console.log(err)
+    console.log(err)
     callback(err)
   })
 }

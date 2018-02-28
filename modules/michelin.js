@@ -1,6 +1,7 @@
 const cheerio = require('cheerio')
 const request = require('request')
 const pReflect = require('p-reflect')
+const pMap = require('p-map')
 
 /* importing the database module */
 const mongodb = require('./mongoDB')
@@ -17,9 +18,13 @@ exports.getAllRestaurant = (callback) => {
       // for (var i = 1; i <= 1; i++) {
       promises.push(getRestaurantsLinks(i))
     }
-    return Promise.all(promises.map(pReflect))
+    return pMap(promises, pReflect,{
+      concurrency: 5
+    })
   }).then((result) => {
     links = result.filter(x => x.isFulfilled).map(x => x.value)
+    errResto = result.filter(x => x.isRejected).map(x => x.reason)
+    console.log(errResto)
     const promises = []
 
     for (var i = 0; i < links.length; i++) {
@@ -27,16 +32,20 @@ exports.getAllRestaurant = (callback) => {
         promises.push(getDescription(links[i][j]))
       }
     }
-    return Promise.all(promises.map(pReflect))
+    return pMap(promises, pReflect, {
+      concurrency: 5
+    })
   }).then((result) => {
-    console.log(result.length)
     restaurants = result.filter(x => x.isFulfilled).map(x => x.value)
+    errResto = result.filter(x => x.isRejected).map(x => x.reason)
+    console.log(errResto)
+    // console.log(restaurants)
     //We save all these restaurant into a mongo database
     return mongodb.saveRestaurants(restaurants)
   }).then((string) => {
     return callback(null, string)
   }).catch(err => {
-    console.log(err)
+    // console.log(err)
     return callback(err)
   })
 }
@@ -97,9 +106,11 @@ function getRestaurantsLinks(page) {
 function getDescription(link) {
   return new Promise(function(resolve, reject) {
     request.get('https://restaurant.michelin.fr' + link, (err, res, body) => {
-      if (err) reject("page access error : trying the description of a restaurant \n " + err)
 
-      // console.log(link)
+      if (err){
+        console.log("############################# ERROR #################################" )
+      reject("page access error : trying the description of a restaurant \n " + err)}
+
       const $ = cheerio.load(body, {
         decodeEntities: false
       })
@@ -136,8 +147,12 @@ function getDescription(link) {
         } else {
           item.photo = "https://restaurant.michelin.fr/sites/mtpb2c_fr/themes/mtpb2c/custom/michelin/img/defaultImage_big.jpg"
         }
+
+        item.lastUpdate = null
+        // console.log(item)
         resolve(item)
       } else {
+        console.log("////////////////////////////////////////////// ERREUR ///////////////////////////////////////////")
         reject(new Error("unable to access description of the restaurant" + link))
       }
     })

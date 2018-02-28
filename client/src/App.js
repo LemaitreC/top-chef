@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Layout, Row, Col, Card,  Radio, Input, Avatar,Switch, Icon} from 'antd';
+import { Layout, Row, Col, Card,  Radio, Input, Avatar,Switch, Icon, Button} from 'antd';
 import Loading from './shared/loading';
 import RestaurantCard from './shared/restaurantCard';
 const { Header, Footer, Sider, Content } = Layout;
@@ -28,16 +28,23 @@ class App extends Component {
     this.setState({loading:loading});
   }
 
-componentDidMount() {
+componentDidMount=() =>{
   fetch(this.state.api).then(res =>{
     if (res.ok) {
          return res.json();
        } else {
          throw new Error('Something went wrong ...');
        }
+       console.log("Discount loaded")
   }).then( data => this.setState({
      restaurants:data
   }, this.handleLoadingState(false))).catch(err => this.setState({ restaurants:[] , error: err }));
+}
+
+loadDiscount = () =>{
+  this.setState({loading:true})
+  fetch(API+"updateDiscounts").then(res =>{window.location.reload()
+  }).catch(err => this.setState({error: err }));
 }
 
 onStarsChange = (e) => {
@@ -96,6 +103,8 @@ checkMenu = (bool) =>{
         </Header>
         <Layout>
           <Sider>
+           <Button type="primary" icon="download" size="large" onClick={this.loadDiscount}>Reload data</Button>
+           {restaurants.length>0 ? <div className="date"><p>Last update : </p><p> {restaurants[0].lastUpdate.substring(0,26)} </p></div>: <p></p>}
             <h3 className="filter">Filters</h3>
             <RadioGroup onChange={this.onStarsChange} value={this.state.stars}>
               <Radio style={radioStyle} value={0}>All Starred</Radio>
@@ -119,16 +128,17 @@ checkMenu = (bool) =>{
                 <Switch checkedChildren={<Icon type="check" />} onChange={this.checkBrunch} unCheckedChildren={<Icon type="cross" />}  />
               </div>
             </div>
+
+            <h2 className="result">{restaurants.length} results</h2>
           </Sider>
           <Content className="content">
-            {this.state.loading ? <Loading message="Working on it ..."/> : <div></div>}
-
-            <Row gutter={48} type="flex" justify="space-around" align="center">
-            {restaurants.map(res =>
-                <RestaurantCard restaurant={res} />
-              )}
-
-            </Row>
+            {this.state.loading ? <Loading message="Working on it ..."/> :
+              <Row gutter={48} type="flex" justify="space-around" align="center">
+              {restaurants.map(res =>
+                  <RestaurantCard restaurant={res} />
+                )}
+              </Row>
+            }
           </Content>
         </Layout>
         <Footer className="footer">
