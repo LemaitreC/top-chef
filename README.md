@@ -29,13 +29,17 @@ I used a Mlab MongoDB database to store my data.
 ### Initializing the project
 
 After having pulled the project from this repository, we need to initialise de node JS project. To do that, go in the directory of the project and enter this command line :
+```sh
 ❯ npm installAll
+```
 
 ### Start the project
 
 Once th project initialised, we can start it with this command :
+```sh
 ❯ npm start
+```
 
 ## Display
 
-![lafourchette](./img/capture1.png)
+![lafourchette](./img/Capture1.PNG)
