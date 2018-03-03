@@ -10,7 +10,7 @@
     "client": "cd client && npm start",
     "server": "node index.js",
     "installClient": "cd client && npm run build",
-    "installAll": "npm install && npm run installClient",
+    "installAll": "concurrent \"npm install\" \"npm run installClient\" ",
     "start": "concurrent \"npm run client\" \"npm run server\" "
   },
   "repository": {
