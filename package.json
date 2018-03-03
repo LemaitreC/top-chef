@@ -7,11 +7,10 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "test",
     "client": "cd client && npm start",
     "server": "node index.js",
-    "install-client":"cd client && npm build",
-    "install-all": "npm install && npm run install-client",
+    "installClient": "cd client && npm run build",
+    "installAll": "npm install && npm run installClient",
     "start": "concurrent \"npm run client\" \"npm run server\" "
   },
   "repository": {
