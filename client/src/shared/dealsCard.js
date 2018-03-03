@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import hotel1 from '../1_hotel.png';
 import hotel2 from '../2_hotel.png';
 import hotel3 from '../3_hotel.png';
 import '../App.css';
-import {Row, Col,Card , Avatar} from 'antd';
+import { Col,Card , Avatar} from 'antd';
 const { Meta } = Card;
 
 
@@ -20,7 +20,7 @@ const DealsCard = ({deal}) =>{
      <Meta
        title={deal.name}
        description={deal.address.street+", " + deal.address.town.toUpperCase()}
-       avatar={<Avatar src={ deal.stars == 1 ? hotel1 : deal.stars == 2 ? hotel2 : hotel3} style={{width:50,height:50}} shape="square" />}
+       avatar={<Avatar src={ deal.stars === 1 ? hotel1 : deal.stars === 2 ? hotel2 : hotel3} style={{width:50,height:50}} shape="square" />}
        />
 
     <p className="exclu">{deal.discount.exclusions}</p>

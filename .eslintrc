@@ -225,7 +225,7 @@
     "no-with": 2,
 
     // require use of the second argument for parseInt() (off by default)
-    "radix": 2,
+    "radix": 0,
 
     // requires to declare all vars on top of their containing scope (off by default)
     "vars-on-top": 0,
@@ -313,7 +313,7 @@
     "eol-last": 2,
 
     // require function expressions to have a name (off by default)
-    "func-names": 2,
+    "func-names": 0,
 
     // enforces use of function declarations or expressions (off by default)
     "func-style": 0, // cannot activate as it breaks `export function myFunc`

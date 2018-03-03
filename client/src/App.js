@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { Layout, Row, Col, Card,  Radio, Input, Avatar,Switch, Icon, Button} from 'antd';
+import { Layout, Row,  Radio,Switch, Icon, Button} from 'antd';
 import Loading from './shared/loading';
 import Deals from './shared/dealsCard';
 const { Header, Footer, Sider, Content } = Layout;
@@ -33,18 +32,17 @@ componentDidMount=() =>{
     if (res.ok) {
          return res.json();
        } else {
-         throw new Error('Something went wrong ...');
+         throw new Error('Failed to load the Data');
        }
-       console.log("Discount loaded")
   }).then( data => this.setState({
      deals:data
-  }, this.handleLoadingState(false))).catch(err => this.setState({ deals:[] , error: err }));
+  }, this.handleLoadingState(false))).catch(err =>this.setState({ deals:[] , error: err }));
 }
 
 loadDiscount = () =>{
   this.setState({loading:true})
   fetch(API+"updateDiscounts").then(res =>{window.location.reload()
-  }).catch(err => this.setState({error: err }));
+  }).catch(err =>this.setState({error: err }));
 }
 
 onStarsChange = (e) => {
@@ -90,7 +88,7 @@ checkMenu = (bool) =>{
           lineHeight: '30px',
           color:'white'
         };
-    const { loading, deals, error } = this.state;
+    const { deals, error } = this.state;
 
     return (
       <Layout className="App">
@@ -132,6 +130,8 @@ checkMenu = (bool) =>{
             <h2 className="result">{deals.length} deals</h2>
           </Sider>
           <Content className="content">
+
+          {error ? <div><h3>Something went wrong .. </h3><span>Error : Failed to load Data</span></div>: <div></div>}
             {this.state.loading ? <Loading message="Working on it ..."/> :
               <Row gutter={48} type="flex" justify="space-around" align="center">
               {deals.map(res =>
@@ -156,7 +156,6 @@ function setAPIurl(stars, is_menu, is_brunch, is_special_offer){
     filter+= is_brunch ? "_brunch": ""
     filter +=  is_special_offer ? "_special_offer" : ""
 
-  console.log(filter)
   return API + "restaurantDiscount/"+filter+"/"+stars;
 }
 
