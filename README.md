@@ -27,17 +27,23 @@ I used a Mlab MongoDB database to store my data.
 ## Command Lines
 
 ### Initializing the project
-
-After having pulled the project from this repository, we need to initialise de node JS project. To do that, go in the directory of the project and enter this command line :
+First we need to clone the project from this repository:
 ```sh
-❯ npm installAll
+❯ git clone https://github.com/LemaitreC/top-chef.git
 ```
+
+After, we need to initialise de node JS project. To do that, go in the directory of the project and enter this command line :
+```sh
+❯ npm run install-all
+```
+
+
 
 ### Start the project
 
 Once th project initialised, we can start it with this command :
 ```sh
-❯ npm start
+❯ npm run start
 ```
 
 ## Display
